@@ -1,0 +1,12 @@
+{
+    "name": "alarmistica-cor",
+    "description": "Projeto de automatização da correlação de alarmes e subsequente abertura de OS para a infraestrutura da rede Metro dentro do COR Algar Telecom. ",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flows.json",
+            "credentialsFile": "flows_cred.json"
+        }
+    }
+}

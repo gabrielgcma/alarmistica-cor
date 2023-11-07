@@ -1,0 +1,95 @@
+[
+    {
+        "id": "7aa67f3b76fd3f34",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0b48377fe320b6e5",
+        "type": "inject",
+        "z": "7aa67f3b76fd3f34",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "num",
+        "x": 190,
+        "y": 180,
+        "wires": [
+            [
+                "9c1f6cbb24a8fbf5"
+            ]
+        ]
+    },
+    {
+        "id": "411298ac487cd31f",
+        "type": "debug",
+        "z": "7aa67f3b76fd3f34",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9c1f6cbb24a8fbf5",
+        "type": "function",
+        "z": "7aa67f3b76fd3f34",
+        "name": "function 1",
+        "func": "// gerar um número aleatório em um range\nfunction getRandomInteger(min, max){\n    const randomFloat = Math.random()\n\n    const difference = max - min\n\n    const random = Math.round(difference * randomFloat)\n\n    const randomWithinRange = random + min\n\n    return randomWithinRange\n}\n\n\nconst dispositivos = [\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.1\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer\"\n    },\n    {\n        vendor: \"juniper\",\n        ip: \"127.0.0.2\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer2\"\n    },\n    {\n        vendor: \"huawei\",\n        ip: \"127.0.0.3\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer3\"\n    },\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.4\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer4\"\n    }\n]\n\nconst alarmes = [\"unav_by_icmp\", \"switch_down\", \"switch_down_flat\", \"storm control\", \"port_down\"]\n\nlet alarmes_gerados = []\n\nfor (let i=0; i<5; i++){\n    let novo_alarme = {\n        dispositivo: dispositivos[getRandomInteger(0, dispositivos.length - 1)],\n        alarme: alarmes[getRandomInteger(0, alarmes.length - 1)]\n    }\n\n    alarmes_gerados.push(novo_alarme);\n}\n\n\nmsg.payload = alarmes_gerados;\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "411298ac487cd31f"
+            ]
+        ]
+    },
+    {
+        "id": "02f08e93cba6ed2c",
+        "type": "http request",
+        "z": "7aa67f3b76fd3f34",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": false,
+        "url": "",
+        "persist": false,
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 770,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    }
+]
