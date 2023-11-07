@@ -6,4 +6,6 @@ app = FastAPI()
 @app.post("/alarmes/")
 async def post_alarm(request: Request):
     print("Alarmes recebidos: ")
-    print(await request.body())
+    alarmes_json = await request.json()
+    for alarme in alarmes_json:
+        print(alarme)
