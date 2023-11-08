@@ -1,0 +1,7 @@
+Payload exemplo
+
+{
+    "IP": "10.10.114.180",
+    "CMD": "show int des",
+    "REGEX": "(.)"
+}
