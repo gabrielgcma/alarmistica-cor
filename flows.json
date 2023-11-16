@@ -21,9 +21,9 @@
                 "vt": "str"
             }
         ],
-        "repeat": "1",
+        "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": "0.03",
         "topic": "",
         "payload": "",
@@ -72,7 +72,7 @@
         "type": "function",
         "z": "7aa67f3b76fd3f34",
         "name": "function 1",
-        "func": "// gerar um número aleatório em um range\nfunction getRandomInteger(min, max){\n    const randomFloat = Math.random()\n\n    const difference = max - min\n\n    const random = Math.round(difference * randomFloat)\n\n    const randomWithinRange = random + min\n\n    return randomWithinRange\n}\n\n\nconst dispositivos = [\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.1\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer\"\n    },\n    {\n        vendor: \"juniper\",\n        ip: \"127.0.0.2\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer2\"\n    },\n    {\n        vendor: \"huawei\",\n        ip: \"127.0.0.3\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer3\"\n    },\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.4\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer4\"\n    }\n]\n\nconst alarmes = [\"unav_by_icmp\", \"port_down\"]\n\nlet alarmes_gerados = []\n\nfor (let i=0; i<5; i++){\n    let novo_alarme = {\n        dispositivo: dispositivos[getRandomInteger(0, dispositivos.length - 1)],\n        alarme: alarmes[getRandomInteger(0, alarmes.length - 1)]\n    }\n\n    alarmes_gerados.push(novo_alarme);\n}\n\n\n// msg.payload = alarmes_gerados;\nmsg.payload = {\n    \"IP\": \"10.10.10.1\",\n    \"CMD\": \"show ip int brief\",\n    \"REGEX\": \"(.)\"\n}\n\nreturn msg;\n\n",
+        "func": "// gerar um número aleatório em um range\n// function getRandomInteger(min, max){\n//     const randomFloat = Math.random()\n\n//     const difference = max - min\n\n//     const random = Math.round(difference * randomFloat)\n\n//     const randomWithinRange = random + min\n\n//     return randomWithinRange\n// }\n\n\n// const dispositivos = [\n//     {\n//         vendor: \"cisco\",\n//         ip: \"127.0.0.1\",\n//         regex: \"$%@$#%@#\",\n//         comando: \"comando qualquer\"\n//     },\n//     {\n//         vendor: \"juniper\",\n//         ip: \"127.0.0.2\",\n//         regex: \"$%@$#%@#\",\n//         comando: \"comando qualquer2\"\n//     },\n//     {\n//         vendor: \"huawei\",\n//         ip: \"127.0.0.3\",\n//         regex: \"$%@$#%@#\",\n//         comando: \"comando qualquer3\"\n//     },\n//     {\n//         vendor: \"cisco\",\n//         ip: \"127.0.0.4\",\n//         regex: \"$%@$#%@#\",\n//         comando: \"comando qualquer4\"\n//     }\n// ]\n\n// const alarmes = [\"unav_by_icmp\", \"port_down\"]\n\n// let alarmes_gerados = []\n\n// for (let i=0; i<5; i++){\n//     let novo_alarme = {\n//         dispositivo: dispositivos[getRandomInteger(0, dispositivos.length - 1)],\n//         alarme: alarmes[getRandomInteger(0, alarmes.length - 1)]\n//     }\n\n//     alarmes_gerados.push(novo_alarme);\n// }\n\n\n// msg.payload = alarmes_gerados;\n\nmsg.payload = {\n    \"IP\": \"10.10.10.1\",\n    \"CMD\": \"show ip int brief\",\n    \"REGEX\": \"(.)\"\n}\n\nreturn msg;\n\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -82,7 +82,9 @@
         "x": 360,
         "y": 180,
         "wires": [
-            []
+            [
+                "02f08e93cba6ed2c"
+            ]
         ]
     },
     {
