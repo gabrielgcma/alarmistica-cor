@@ -4,6 +4,15 @@ import json
 import re
 from equipment_interface import *
 import sys
+from queue import Queue, Full
+
+logger = logging.getLogger()
+formato = "%(asctime)s: %(message)s"
+logging.basicConfig(format=formato)
+logger.setLevel(logging.INFO)
+
+buffer = Queue(10)
+fila = Queue(1000)
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -34,39 +43,47 @@ class RequestHandler(BaseHTTPRequestHandler):
         #
         try:
             req_data = json.loads(post_data)
-            logging.info(
-                "Enviando comando no equipemento "
-                + req_data["IP"]
-                + " Comando: "
-                + req_data["CMD"]
-            )
-            conexao = InterfaceEquipment(
-                ip=req_data["IP"], user="<USER>", password="<PASS>"
-            )
-            tem_conexao = conexao.connect()
-            if not tem_conexao:
-                status = 501
-                saida = str(conexao.cod_error)
-                logging.error(
-                    "Erro ao logar no equipamento da req "
-                    + str(req_data["IP"])
-                    + ": "
-                    + saida
-                )
-            else:
-                status = 200
-                saida = conexao.send_command_default(req_data["CMD"])
-                saida = saida.replace("'", " ")
-                regex = re.compile(req_data["REGEX"])
-                reg_match = regex.match(saida)
-                if not saida:
-                    status = 502
-                elif reg_match:
-                    saida = reg_match.group(1)
-                else:
-                    status = 503
+            try:
+                buffer.put_nowait(req_data)
+            except Full:
+                logging.info("Buffer de requisições POST cheio.")
+                fila.put_nowait(req_data)
+                # executar cada um dos logins bufferizados
+                while not buffer.empty():
+                    req_data = buffer.get()
+                    logging.info(
+                        "Enviando comando no equipamento "
+                        + req_data["IP"]
+                        + ". Comando: "
+                        + req_data["CMD"]
+                    )
+                    conexao = InterfaceEquipment(
+                        ip=req_data["IP"], user="admin", password="1234"
+                    )
+                    tem_conexao = conexao.connect()
+                    if not tem_conexao:
+                        status = 501
+                        saida = str(conexao.cod_error)
+                        logging.error(
+                            "Erro ao logar no equipamento da req "
+                            + str(req_data["IP"])
+                            + ": "
+                            + saida
+                        )
+                    else:
+                        status = 200
+                        saida = conexao.send_command_default(req_data["CMD"])
+                        saida = saida.replace("'", " ")
+                        regex = re.compile(req_data["REGEX"])
+                        reg_match = regex.match(saida)
+                        if not saida:
+                            status = 502
+                        elif reg_match:
+                            saida = reg_match.group(1)
+                        else:
+                            status = 503
 
-                conexao.disconnect()
+                        conexao.disconnect()
         except Exception as e:
             status = 500
             logging.error(
@@ -81,20 +98,16 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=8080):
-    formato = "%(asctime)s: %(message)s"
-    # logging.basicConfig(
-    #    format=formato, level=logging.INFO, filename="CoraNetworkManager.log"
-    # )
-    logging.basicConfig(format=formato, level=logging.INFO)
     server_address = ("", port)
     httpd = server_class(server_address, handler_class)
-    logging.info("Starting httpd...\n")
-    print(httpd)
+    logging.info(f"Iniciando servidor na porta {port}\n")
     try:
         httpd.serve_forever()
+        logging.info(f"Servidor ativo na porta {port}")
     except KeyboardInterrupt:
-        logging.info("Stopping httpd...\n")
+        logging.info("Parando o servidor...\n")
         httpd.server_close()
+        logging.info("Servidor encerrado")
 
 
 if __name__ == "__main__":

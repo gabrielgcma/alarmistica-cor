@@ -21,10 +21,10 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "0.03",
         "topic": "",
         "payload": "",
         "payloadType": "num",
@@ -44,7 +44,7 @@
         "method": "POST",
         "ret": "txt",
         "paytoqs": "ignore",
-        "url": "http://127.0.0.1:8080",
+        "url": "http://127.0.0.1:8000/logar/",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -62,7 +62,9 @@
         "x": 610,
         "y": 180,
         "wires": [
-            []
+            [
+                "411298ac487cd31f"
+            ]
         ]
     },
     {
@@ -70,7 +72,7 @@
         "type": "function",
         "z": "7aa67f3b76fd3f34",
         "name": "function 1",
-        "func": "// gerar um número aleatório em um range\nfunction getRandomInteger(min, max){\n    const randomFloat = Math.random()\n\n    const difference = max - min\n\n    const random = Math.round(difference * randomFloat)\n\n    const randomWithinRange = random + min\n\n    return randomWithinRange\n}\n\n\nconst dispositivos = [\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.1\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer\"\n    },\n    {\n        vendor: \"juniper\",\n        ip: \"127.0.0.2\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer2\"\n    },\n    {\n        vendor: \"huawei\",\n        ip: \"127.0.0.3\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer3\"\n    },\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.4\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer4\"\n    }\n]\n\nconst alarmes = [\"unav_by_icmp\", \"port_down\"]\n\nlet alarmes_gerados = []\n\nfor (let i=0; i<5; i++){\n    let novo_alarme = {\n        dispositivo: dispositivos[getRandomInteger(0, dispositivos.length - 1)],\n        alarme: alarmes[getRandomInteger(0, alarmes.length - 1)]\n    }\n\n    alarmes_gerados.push(novo_alarme);\n}\n\n\n// msg.payload = alarmes_gerados;\nmsg.payload = {\n    \"IP\": \"10.10.114.180\",\n    \"CMD\": \"show int des\",\n    \"REGEX\": \"(.)\"\n}\n\nreturn msg;\n\n",
+        "func": "// gerar um número aleatório em um range\nfunction getRandomInteger(min, max){\n    const randomFloat = Math.random()\n\n    const difference = max - min\n\n    const random = Math.round(difference * randomFloat)\n\n    const randomWithinRange = random + min\n\n    return randomWithinRange\n}\n\n\nconst dispositivos = [\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.1\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer\"\n    },\n    {\n        vendor: \"juniper\",\n        ip: \"127.0.0.2\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer2\"\n    },\n    {\n        vendor: \"huawei\",\n        ip: \"127.0.0.3\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer3\"\n    },\n    {\n        vendor: \"cisco\",\n        ip: \"127.0.0.4\",\n        regex: \"$%@$#%@#\",\n        comando: \"comando qualquer4\"\n    }\n]\n\nconst alarmes = [\"unav_by_icmp\", \"port_down\"]\n\nlet alarmes_gerados = []\n\nfor (let i=0; i<5; i++){\n    let novo_alarme = {\n        dispositivo: dispositivos[getRandomInteger(0, dispositivos.length - 1)],\n        alarme: alarmes[getRandomInteger(0, alarmes.length - 1)]\n    }\n\n    alarmes_gerados.push(novo_alarme);\n}\n\n\n// msg.payload = alarmes_gerados;\nmsg.payload = {\n    \"IP\": \"10.10.10.1\",\n    \"CMD\": \"show ip int brief\",\n    \"REGEX\": \"(.)\"\n}\n\nreturn msg;\n\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -80,9 +82,7 @@
         "x": 360,
         "y": 180,
         "wires": [
-            [
-                "02f08e93cba6ed2c"
-            ]
+            []
         ]
     },
     {
@@ -94,7 +94,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 880,
